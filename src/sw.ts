@@ -1,5 +1,6 @@
 /// <reference types="vite-plugin-pwa/client" />
 /// <reference types="vite-plugin-pwa/info" />
+/// <reference lib="webworker" />
 
 declare const self: ServiceWorkerGlobalScope;
 
