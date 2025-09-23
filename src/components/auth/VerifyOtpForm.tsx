@@ -1,5 +1,5 @@
-import { useState, useRef, ChangeEvent, KeyboardEvent, FormEvent } from "react";
-
+import { useState, useRef} from "react";
+import type { ChangeEvent, KeyboardEvent, FormEvent } from "react";
 interface Props {
   phoneNumber: string;
   onSubmit: (otp: string) => void;
@@ -67,7 +67,7 @@ const VerifyOtpForm = ({ phoneNumber, onSubmit, onEditPhone }: Props) => {
           {otp.map((digit, index) => (
             <input
               key={index}
-              ref={(el) => (inputRefs.current[index] = el)}
+              ref={(el) => void (inputRefs.current[index] = el)}
               type="text"
               maxLength={1}
               value={digit}

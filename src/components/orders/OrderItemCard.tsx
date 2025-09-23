@@ -1,7 +1,7 @@
 import { FaCalendar, FaUsers, FaCheckCircle } from "react-icons/fa";
-import gameImage from "../../assets/game-image.jpg"; // یک عکس placeholder برای بازی‌ها
+import { Link } from "react-router-dom";
+import gameImage from "../../assets/game-image.jpg";
 
-// تعریف یک اینترفیس برای داده‌های ورودی جهت تایپ‌دهی بهتر
 interface OrderItemProps {
   id: number;
   title: string;
@@ -12,6 +12,7 @@ interface OrderItemProps {
 }
 
 const OrderItemCard = ({
+  id,
   title,
   category,
   date,
@@ -55,12 +56,12 @@ const OrderItemCard = ({
 
         {/* بخش دکمه */}
         <div className="mt-4 md:mt-0">
-          <a
-            href="#"
+          <Link
+            to={`/orders/${id}`}
             className="text-primary-red font-bold py-2 px-4 rounded-lg hover:bg-red-50 dark:hover:bg-gray-700 transition-colors"
           >
             مشاهده جزئیات
-          </a>
+          </Link>
         </div>
       </div>
     </div>

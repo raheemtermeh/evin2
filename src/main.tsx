@@ -6,12 +6,21 @@ import "./index.css";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("../public/sw.js")
+      .then(() => console.log("Service Worker registered"))
+      .catch((err) => console.log("SW registration failed:", err));
+  });
+}
+
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         {" "}
-        {/* <-- کل برنامه داخل روتر قرار گرفت */}
         <App />
       </BrowserRouter>
     </Provider>

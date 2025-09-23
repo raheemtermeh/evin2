@@ -1,38 +1,27 @@
 import OrderItemCard from "../components/orders/OrderItemCard";
-import { FaSearch } from "react-icons/fa";
 
 const OrdersPage = () => {
-  // داده‌های استاتیک برای نمایش
   const ordersData = [
     {
       id: 1,
-      title: "منچ",
-      category: "ludo +10",
-      date: "11 بهمن 1403 ساعت 18",
-      capacity: 2,
-      remaining: 2,
+      title: "مافیا",
+      category: "mafia +10",
+      date: "28 اردیبهشت 1403 ساعت 22",
+      capacity: 30,
+      remaining: 5,
     },
     {
       id: 2,
       title: "منچ",
       category: "ludo +10",
       date: "11 بهمن 1403 ساعت 18",
-      capacity: 2,
-      remaining: 2,
-    },
-    {
-      id: 3,
-      title: "مافیا",
-      category: "mafia +10",
-      date: "11 بهمن 1403 ساعت 18",
-      capacity: 2,
+      capacity: 4,
       remaining: 2,
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* هدر صفحه شامل عنوان و فیلتر */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">
           رزروهای من
@@ -55,7 +44,6 @@ const OrdersPage = () => {
         </div>
       </div>
 
-      {/* لیست رزروها */}
       <div className="space-y-4">
         {ordersData.map((order) => (
           <OrderItemCard key={order.id} {...order} />

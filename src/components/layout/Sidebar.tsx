@@ -1,32 +1,89 @@
-import { NavLink } from "react-router-dom"; // <-- ایمپورت NavLink
+import { NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { toggleTheme } from "../../features/theme/themeSlice";
-// ... بقیه import ها مثل قبل ...
 import {
   IoHomeOutline,
+  IoNotificationsOutline,
+  IoPieChartOutline,
+  IoPersonOutline,
+  IoHeadsetOutline,
+  IoShieldCheckmarkOutline,
+  IoInformationCircleOutline,
+  IoLogOutOutline,
   IoSunnyOutline,
   IoMoonOutline,
-  IoLogOutOutline,
 } from "react-icons/io5";
-import { BsReceipt } from "react-icons/bs";
+import {
+  BsReceipt,
+  BsExclamationCircle,
+  BsQuestionCircle,
+} from "react-icons/bs";
 import avatar from "../../assets/mmdi.jpg";
 
 interface Props {
-  onLogout: () => void;
+  onLogoutClick: () => void; // <-- ۱. نام پراپ به onLogoutClick تغییر کرد
   isOpen: boolean;
 }
 
-const Sidebar = ({ onLogout, isOpen }: Props) => {
+const Sidebar = ({ onLogoutClick, isOpen }: Props) => {
+  // <-- ۲. از پراپ جدید استفاده شد
   const dispatch = useAppDispatch();
   const { mode } = useAppSelector((state) => state.theme);
 
-  const handleToggleTheme = () => dispatch(toggleTheme());
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
+  };
 
   const menuItems = [
     { title: "رویداد ها", icon: <IoHomeOutline size={22} />, path: "/" },
     { title: "سفارشات", icon: <BsReceipt size={22} />, path: "/orders" },
-    // ... بقیه آیتم‌ها با path مخصوص خودشان
+    {
+      title: "اعلانات",
+      icon: <IoNotificationsOutline size={22} />,
+      path: "/notifications",
+    },
+    {
+      title: "گزارش مالی",
+      icon: <IoPieChartOutline size={22} />,
+      path: "/financial-report",
+    },
+    { title: "پروفایل", icon: <IoPersonOutline size={22} />, path: "/profile" },
   ];
+
+  const supportItems = [
+    {
+      title: "گزارش مشکل",
+      icon: <BsExclamationCircle size={22} />,
+      path: "/report-issue",
+    },
+    {
+      title: "تماس با پشتیبانی",
+      icon: <IoHeadsetOutline size={22} />,
+      path: "/support",
+    },
+    {
+      title: "سوالات متداول",
+      icon: <BsQuestionCircle size={22} />,
+      path: "/faq",
+    },
+    {
+      title: "قوانین و حریم خصوصی",
+      icon: <IoShieldCheckmarkOutline size={22} />,
+      path: "/privacy",
+    },
+    {
+      title: "درباره ما",
+      icon: <IoInformationCircleOutline size={22} />,
+      path: "/about",
+    },
+  ];
+
+  const linkClasses = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-x-4 p-3 rounded-xl transition-colors cursor-pointer ${
+      isActive
+        ? "bg-primary-red text-white shadow-md"
+        : "hover:bg-gray-100 dark:hover:bg-gray-700"
+    }`;
 
   return (
     <aside
@@ -34,7 +91,7 @@ const Sidebar = ({ onLogout, isOpen }: Props) => {
         bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 
         w-72 p-4 flex flex-col shadow-lg flex-shrink-0
         fixed top-0 right-0 h-screen z-30 transition-transform duration-300 ease-in-out
-        lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:rounded-3xl lg:ml-4 lg:translate-x-0
+        lg:sticky lg:top-4 lg:h-2/3 lg:rounded-3xl lg:ml-4 lg:translate-x-0
         ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
     >
@@ -57,38 +114,40 @@ const Sidebar = ({ onLogout, isOpen }: Props) => {
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto scrollbar-none">
+      <nav className="flex-1 flex flex-col justify-between overflow-y-auto scrollbar-none">
         <ul className="space-y-2">
           {menuItems.map((item) => (
             <li key={item.title}>
-              <NavLink
-                to={item.path}
-                end // برای اینکه لینک اصلی "/" با بقیه لینک‌ها فعال نشود
-                className={({ isActive }) =>
-                  `flex items-center gap-x-4 p-3 rounded-xl transition-colors cursor-pointer ${
-                    isActive
-                      ? "bg-primary-red text-white shadow-md"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`
-                }
-              >
+              <NavLink to={item.path} className={linkClasses} end>
                 {item.icon}
                 <span className="font-semibold">{item.title}</span>
               </NavLink>
             </li>
           ))}
         </ul>
-      </nav>
-      {/* دکمه خروج جداگانه برای دسترسی بهتر */}
-      <div className="mt-4">
-        <div
-          onClick={onLogout}
-          className="flex items-center gap-x-4 p-3 rounded-xl transition-colors cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          <IoLogOutOutline size={22} />
-          <span className="font-semibold">خروج</span>
+
+        <div>
+          <ul className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+            {supportItems.map((item) => (
+              <li key={item.title}>
+                <NavLink to={item.path} className={linkClasses}>
+                  {item.icon}
+                  <span className="font-semibold">{item.title}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4">
+            <div
+              onClick={onLogoutClick} // <-- ۳. اینجا تابع جدید فراخوانی می‌شود
+              className="flex items-center gap-x-4 p-3 rounded-xl transition-colors cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <IoLogOutOutline size={22} />
+              <span className="font-semibold">خروج</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </nav>
     </aside>
   );
 };

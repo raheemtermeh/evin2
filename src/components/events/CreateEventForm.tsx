@@ -1,17 +1,15 @@
 import { useState } from "react";
+import type { DateObject } from "react-multi-date-picker"; // ایمپورت type
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 
-// دیگر نیازی به کامپوننت CustomInput جداگانه نیست
-// کتابخانه react-multi-date-picker استایل‌دهی را ساده‌تر می‌کند
-
 const CreateEventForm = () => {
-  // مقدار اولیه stateها را null قرار می‌دهیم تا placeholder نمایش داده شود
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  // نوع state ها دقیق‌تر شد
+  const [selectedDate, setSelectedDate] = useState<DateObject | null>(null);
+  const [startTime, setStartTime] = useState<DateObject | null>(null);
+  const [endTime, setEndTime] = useState<DateObject | null>(null);
 
   const commonInputClasses =
     "w-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-500 placeholder:text-gray-400 dark:placeholder:text-gray-500 cursor-pointer";
@@ -22,7 +20,7 @@ const CreateEventForm = () => {
         ایجاد بازی
       </h2>
       <form>
-        {/* بخش‌های دسته بندی و عنوان رویداد */}
+        {/* ... بقیه فرم بدون تغییر ... */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block font-semibold mb-2 text-gray-700 dark:text-gray-300">
@@ -45,13 +43,10 @@ const CreateEventForm = () => {
             />
           </div>
         </div>
-
-        {/* --- START: بخش تاریخ و زمان با تقویم شمسی --- */}
         <h3 className="text-xl font-bold mt-8 mb-4 text-gray-800 dark:text-gray-200">
           تاریخ و زمان
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* انتخابگر تاریخ شمسی */}
           <div>
             <label className="block font-semibold mb-2 text-gray-700 dark:text-gray-300">
               تاریخ
@@ -59,7 +54,7 @@ const CreateEventForm = () => {
             <div className="relative">
               <DatePicker
                 value={selectedDate}
-                onChange={setSelectedDate}
+                onChange={(date) => setSelectedDate(date)} // onChange به این شکل تغییر کرد
                 calendar={persian}
                 locale={persian_fa}
                 calendarPosition="bottom-right"
@@ -69,7 +64,6 @@ const CreateEventForm = () => {
               <FaCalendarAlt className="absolute right-3 top-3.5 text-gray-400 pointer-events-none" />
             </div>
           </div>
-          {/* انتخابگر زمان شروع */}
           <div>
             <label className="block font-semibold mb-2 text-gray-700 dark:text-gray-300">
               زمان شروع <span className="text-red-500">*</span>
@@ -79,8 +73,8 @@ const CreateEventForm = () => {
                 disableDayPicker
                 format="HH:mm"
                 value={startTime}
-                onChange={setStartTime}
-                calendar={persian} // برای نمایش صحیح اعداد
+                onChange={(time) => setStartTime(time)} // onChange به این شکل تغییر کرد
+                calendar={persian}
                 locale={persian_fa}
                 calendarPosition="bottom-right"
                 inputClass={commonInputClasses}
@@ -89,7 +83,6 @@ const CreateEventForm = () => {
               <FaClock className="absolute right-3 top-3.5 text-gray-400 pointer-events-none" />
             </div>
           </div>
-          {/* انتخابگر زمان پایان */}
           <div>
             <label className="block font-semibold mb-2 text-gray-700 dark:text-gray-300">
               زمان پایان
@@ -99,8 +92,8 @@ const CreateEventForm = () => {
                 disableDayPicker
                 format="HH:mm"
                 value={endTime}
-                onChange={setEndTime}
-                calendar={persian} // برای نمایش صحیح اعداد
+                onChange={(time) => setEndTime(time)} // onChange به این شکل تغییر کرد
+                calendar={persian}
                 locale={persian_fa}
                 calendarPosition="bottom-right"
                 inputClass={commonInputClasses}
@@ -110,9 +103,7 @@ const CreateEventForm = () => {
             </div>
           </div>
         </div>
-        {/* --- END: بخش تاریخ و زمان --- */}
-
-        {/* بخش‌های بلیط، توضیحات و شرایط استفاده */}
+        {/* ... بقیه فرم ... */}
         <h3 className="text-xl font-bold mt-8 mb-4 text-gray-800 dark:text-gray-200">
           بلیط
         </h3>
@@ -148,40 +139,6 @@ const CreateEventForm = () => {
             placeholder="توضیحات مربوط به رویداد..."
           ></textarea>
         </div>
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">
-            شرایط استفاده
-          </h3>
-          <div className="space-y-3">
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
-              />
-              <span className="mr-3 text-gray-700 dark:text-gray-300">
-                حضور شرکت‌کنندگان حداقل ۱۵ دقیقه قبل از شروع بازی الزامی است.
-              </span>
-            </label>
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
-              />
-              <span className="mr-3 text-gray-700 dark:text-gray-300">
-                در صورت تاخیر یا ترک بازی بدون هماهنگی، امتیاز فرد حذف می‌گردد.
-              </span>
-            </label>
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
-              />
-              <span className="mr-3 text-gray-700 dark:text-gray-300">
-                شروط و تعهدات طرفین قرارداد را قبول دارم.
-              </span>
-            </label>
-          </div>
-        </div>
         <div className="mt-8">
           <button
             type="submit"
@@ -194,5 +151,4 @@ const CreateEventForm = () => {
     </div>
   );
 };
-
 export default CreateEventForm;

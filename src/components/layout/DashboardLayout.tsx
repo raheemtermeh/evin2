@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom"; // <-- ایمپورت Outlet
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import ConfirmationModal from "../confirm/ConfirmationModal";
 
 interface Props {
   onLogout: () => void;
@@ -9,9 +10,21 @@ interface Props {
 
 const DashboardLayout = ({ onLogout }: Props) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  // این تابع فقط مودال را باز می‌کند
+  const handleLogoutClick = () => {
+    setLogoutModalOpen(true);
+  };
+
+  // این تابع بعد از تایید کاربر، مودال را می‌بندد و خروج را انجام می‌دهد
+  const handleConfirmLogout = () => {
+    setLogoutModalOpen(false);
+    onLogout(); // <-- اینجا تابع اصلی خروج که از App.tsx آمده فراخوانی می‌شود
   };
 
   return (
@@ -26,14 +39,25 @@ const DashboardLayout = ({ onLogout }: Props) => {
         ></div>
       )}
 
-      <Sidebar onLogout={onLogout} isOpen={isSidebarOpen} />
+      {/* پراپ onLogoutClick به سایدبار پاس داده می‌شود */}
+      <Sidebar onLogoutClick={handleLogoutClick} isOpen={isSidebarOpen} />
 
       <div className="flex-1 flex flex-col min-w-0">
         <Header onMenuClick={toggleSidebar} />
         <main className="flex-1 p-4 lg:p-6">
-          <Outlet /> {/* <-- صفحات فرزند در اینجا رندر می‌شوند */}
+          <Outlet />
         </main>
       </div>
+
+      {/* مودال اینجا رندر می‌شود و با تغییر استیت نمایش داده می‌شود */}
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+        title="خروج از حساب کاربری"
+      >
+        <p>آیا برای خروج از حساب کاربری خود اطمینان دارید؟</p>
+      </ConfirmationModal>
     </div>
   );
 };
