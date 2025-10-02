@@ -6,6 +6,7 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   plugins: [
     react(),
+    
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: "auto",
@@ -53,6 +54,7 @@ export default defineConfig({
       srcDir: "src",
       filename: "sw.ts",
     }),
+    
   ],
   base: "./"
 });

@@ -101,6 +101,7 @@ const Sidebar = ({ onLogoutClick, isOpen }: Props) => {
           alt="User Avatar"
           className="w-24 h-24 rounded-full object-cover"
         />
+       
         <button
           onClick={handleToggleTheme}
           className="mt-4 p-2 rounded-full bg-gray-100 dark:bg-gray-700"

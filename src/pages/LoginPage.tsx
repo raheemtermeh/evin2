@@ -12,15 +12,24 @@ const LoginPage = ({ onLoginSuccess }: Props) => {
   const [step, setStep] = useState<LoginStep>("enter-phone");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handlePhoneSubmit = (phone: string) => {
-    console.log("Phone number submitted:", phone);
-    setPhoneNumber(phone);
+  // نام این state کمی گمراه کننده است. این در واقع smsToken است.
+  // می‌توانید نامش را به smsToken تغییر دهید، اما با همین نام هم کار می‌کند.
+  const [smsToken, setSmsToken] = useState("");
+
+  // وقتی شماره ارسال شد:
+  const handlePhoneSubmit = (data: {
+    phone: string;
+    token: string; // این همان smsToken است
+    code: string;
+  }) => {
+    console.log("Phone number submitted:", data);
+    setPhoneNumber(data.phone);
+    setSmsToken(data.token); // توکن در state والد ذخیره می‌شود
     setStep("verify-otp");
   };
 
-  const handleOtpSubmit = (otp: string) => {
-    console.log(`Verifying OTP ${otp} for phone number ${phoneNumber}`);
-    // اینجا فانکشن والد را فراخوانی می‌کنیم تا وضعیت لاگین را تغییر دهد
+  // onSubmit برای VerifyOtpForm نیاز به تغییر ندارد
+  const handleOtpSubmit = () => {
     onLoginSuccess();
   };
 
@@ -40,6 +49,7 @@ const LoginPage = ({ onLoginSuccess }: Props) => {
       ) : (
         <VerifyOtpForm
           phoneNumber={phoneNumber}
+          token={smsToken} // <--- ✅ این خط مهم‌ترین تغییر است
           onSubmit={handleOtpSubmit}
           onEditPhone={handleBackToPhoneStep}
         />

@@ -20,7 +20,7 @@ const SupportPage = lazy(() => import("./pages/SupportPage"));
 const FaqPage = lazy(() => import("./pages/FaqPage"));
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { mode } = useAppSelector((state) => state.theme);
 
   useEffect(() => {
