@@ -1,25 +1,28 @@
+// src/pages/auth/EnterPhoneNumberForm.tsx
 import { useState, useRef, useEffect } from "react";
 import type { FormEvent } from "react";
-import { generateCaptcha } from "../../services/captchaService";
+// import { generateCaptcha } from "../../services/captchaService"; // 🔒 فعلاً غیرفعال شد
 
 interface Props {
   onSubmit: (data: { phone: string; token: string; code: string }) => void;
 }
 
 const MAX_ATTEMPTS = 5;
-const COOLDOWN_PERIOD = 5 * 60 * 1000; // 5 دقیقه
+const COOLDOWN_PERIOD = 5 * 60 * 1000;
 
 const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
-  // captcha states
+  // ✅ کپچا موقتاً غیرفعال شد
+  /*
   const [captchaImage, setCaptchaImage] = useState<string | null>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaValue, setCaptchaValue] = useState<string>("");
+  */
 
-  // گرفتن کپچا در mount
-  useEffect(() => {
-    fetchCaptcha();
-  }, []);
+  // useEffect(() => {
+  //   fetchCaptcha();
+  // }, []);
 
+  /*
   const fetchCaptcha = async () => {
     try {
       const res = await generateCaptcha();
@@ -32,6 +35,7 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
       console.error("Failed to load captcha:", err);
     }
   };
+  */
 
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +65,6 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
   };
 
   const formatPhoneNumber = (value: string): string => {
-    // فقط اعداد را نگه دار و برگردون
     return value.replace(/\D/g, "");
   };
 
@@ -92,10 +95,10 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
       return;
     }
 
-    if (!captchaValue.trim()) {
-      alert("لطفاً کد امنیتی را وارد کنید.");
-      return;
-    }
+    // if (!captchaValue.trim()) {
+    //   alert("لطفاً کد امنیتی را وارد کنید.");
+    //   return;
+    // }
 
     setIsSubmitting(true);
 
@@ -106,15 +109,15 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            token: captchaToken,
-            code: Number(captchaValue),
+            // token: captchaToken, // 🔒 موقتاً غیرفعال
+            // code: Number(captchaValue), // 🔒 موقتاً غیرفعال
             username: phone,
           }),
         }
       );
 
       if (res.status === 403) {
-        alert("کپچا یا شماره تلفن معتبر نیست.");
+        alert("شماره تلفن معتبر نیست یا سرور دسترسی ندارد.");
         setAttempts((prev) => prev + 1);
         return;
       }
@@ -126,31 +129,28 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
       const data = await res.json();
       console.log("Login response:", data);
 
-      // 👇 اینجا توکن sms رو از ریسپانس می‌گیریم
       const smsToken = data?.token;
 
       if (!smsToken) {
         throw new Error("توکن SMS از سرور برنگشت.");
       }
 
-      // 👇 پاس دادن توکن و شماره به صفحه بعد
       onSubmit({
         phone,
         token: smsToken,
-        code: captchaValue,
+        code: "", // 🔒 چون کپچا غیرفعال شده
       });
 
       setPhone("");
       setAttempts(0);
     } catch (error) {
-      console.error("خطا در ارسال فرم:", error);
+      console.log("خطا در ارسال فرم:", error);
       alert("خطایی در ارسال فرم رخ داده است. لطفاً مجدداً تلاش کنید.");
     } finally {
       setIsSubmitting(false);
       setLastAttemptTime(Date.now());
     }
   };
-
 
   const showCooldownMessage = isInCooldown();
   const showAttemptsWarning = attempts > 0 && attempts < MAX_ATTEMPTS;
@@ -194,7 +194,8 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
           autoComplete="tel"
         />
 
-        {/* Captcha */}
+        {/* 🔒 کپچا موقتاً غیرفعال شده */}
+        {/*
         {captchaImage && (
           <div className="mt-6 flex flex-col items-center">
             <img
@@ -218,6 +219,7 @@ const EnterPhoneNumberForm = ({ onSubmit }: Props) => {
             </button>
           </div>
         )}
+        */}
 
         <button
           type="submit"

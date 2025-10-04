@@ -71,10 +71,18 @@ const ProfilePage = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
+
+        // 🔑 نمایش توکن برای دیباگ
+        const token = localStorage.getItem("accessToken");
+        console.debug("[ProfilePage] accessToken in localStorage:", token);
+
         const data = await getProfile();
+        console.debug("[ProfilePage] profile data:", data);
+
         setProfile(data);
       } catch (err) {
-        console.error("خطا در گرفتن پروفایل:", err);
+        console.error("❌ خطا در گرفتن پروفایل:", err);
+        alert("خطا در گرفتن اطلاعات پروفایل. لطفاً دوباره تلاش کنید.");
       } finally {
         setLoading(false);
       }
@@ -94,10 +102,11 @@ const ProfilePage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.debug("[ProfilePage] submitting profile update:", profile);
       await updateProfile(profile);
-      alert("پروفایل با موفقیت به‌روزرسانی شد ✅");
+      alert("✅ پروفایل با موفقیت به‌روزرسانی شد");
     } catch (err) {
-      console.error("خطا در ذخیره پروفایل:", err);
+      console.error("❌ خطا در ذخیره پروفایل:", err);
       alert("خطا در ذخیره اطلاعات پروفایل!");
     }
   };
@@ -110,6 +119,7 @@ const ProfilePage = () => {
     <div className="p-4 sm:p-6 md:p-8 space-y-8">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-t-4 border-blue-500 p-6">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-6">اطلاعات حساب کاربری</h1>
+
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <InfoField label="نام و نام خانوادگی" name="full_name" value={profile.full_name} status={profile.full_name ? "verified" : "unverified"} onChange={handleChange} />
           <InfoField label="کد ملی" name="national_code" value={profile.national_code} status={profile.national_code ? "verified" : "unverified"} onChange={handleChange} />
@@ -142,7 +152,11 @@ const ProfilePage = () => {
               ثبت نام هستم.
             </label>
           </div>
-          <button type="submit" onClick={handleSubmit} className="w-full sm:w-auto bg-primary-red text-white font-bold py-3 px-12 rounded-lg hover:bg-red-700 transition-colors">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="w-full sm:w-auto bg-primary-red text-white font-bold py-3 px-12 rounded-lg hover:bg-red-700 transition-colors"
+          >
             ثبت نهایی
           </button>
         </div>
