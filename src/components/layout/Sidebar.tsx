@@ -48,6 +48,7 @@ const Sidebar = ({ onLogoutClick, isOpen }: Props) => {
       path: "/financial-report",
     },
     { title: "پروفایل", icon: <IoPersonOutline size={22} />, path: "/profile" },
+    { title: "اطلاعات کافه", icon: <IoPersonOutline size={22} />, path: "/cafe" },
   ];
 
   const supportItems = [

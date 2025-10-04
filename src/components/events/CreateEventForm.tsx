@@ -5,6 +5,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { div } from "framer-motion/client";
 import CreateEventContinue from "./CreateEventContinue";
+import { createEvent } from "../../services/eventService";
 
 const CreateEventForm = () => {
   const navigate = useNavigate(); // استفاده از useNavigate برای ناوبری
@@ -70,18 +71,25 @@ const CreateEventForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setFormStep("preview");
+      try {
+        await createEvent(formData);
+        setFormStep("success");
+      } catch (err) {
+        console.error("Error submitting event:", err);
+      }
     }
   };
 
   // --- نمایش شرطی کامپوننت‌ها ---
   if (formStep === "preview") {
-    return <div>
-      <CreateEventContinue />
-    </div>;
+    return (
+      <div>
+        <CreateEventContinue />
+      </div>
+    );
   }
 
   if (formStep === "success") {
